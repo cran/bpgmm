@@ -19,3 +19,12 @@ adjacency matrix
 \description{
 Tool for vector to matrix
 }
+\examples{
+m <- 20
+n <- 500
+ZOneDim <- sample(seq_len(m), n, replace = TRUE)
+#'
+\donttest{
+getZmat(ZOneDim, m, n)
+}
+}

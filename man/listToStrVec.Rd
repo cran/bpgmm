@@ -15,3 +15,10 @@ vector of string
 \description{
 Convert list of string to vector of string
 }
+\examples{
+stringList <- list("abc")
+#'
+\donttest{
+listToStrVec(stringList)
+}
+}

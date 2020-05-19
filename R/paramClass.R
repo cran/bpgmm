@@ -8,22 +8,21 @@
 #' @slot M A list value
 #' @slot lambda A list value
 #' @slot Y A list value
-#'
 setClass(
   "ThetaYList",
   slots = c(
-    tao    = "vector",
-    psy    = "list",
-    M      = "list",
+    tao = "vector",
+    psy = "list",
+    M = "list",
     lambda = "list",
-    Y      = "list"
+    Y = "list"
   ),
   prototype = list(
-    tao    = c(),
-    psy    = list(),
-    M      = list(),
+    tao = c(),
+    psy = list(),
+    M = list(),
     lambda = list(),
-    Y      = list()
+    Y = list()
   )
 )
 

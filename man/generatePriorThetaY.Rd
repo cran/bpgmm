@@ -23,33 +23,28 @@ generatePriorThetaY(m, n, p, muBar, hparam, qVec, ZOneDim, constraint)
 
 \item{constraint}{constraint}
 }
-\value{
-PriorThetaY list
-}
 \description{
 generate prior value for parameter Theta and Y.
 }
 \examples{
-
-sample_data = "https://raw.githubusercontent.com/lzyacht/bpgmm-examples/master/data/sampleData.csv"
-X = utils::read.table(sample_data, header = TRUE, sep = ',')
-X = as.matrix(X)
-nsim = 1
-burn = 20
-n = ncol(X)
-p = nrow(X)
-m = 2
-qVec = rep(3,m)
-qnew = 3
-delta = 2
-ggamma = 2
-dVec = c(1,1,1)
-sVec = c(1,1,1)
-constraint = c(1,1,1)
-hparam = new("Hparam", alpha1=1, alpha2=2, bbeta=3, delta=4, ggamma=5)
-muBar = apply(X, MARGIN = 1, FUN = mean)
-ZOneDim = kmeans(x = t(X), centers = m)$cluster
+m <- 20
+n <- 500
+p <- 10
+muBar <- c(
+  -33.1342706763595, -35.2699639183419, 48.276928009445, 16.2370659601218,
+  19.0023163870536, -23.4900965314972, 37.1081269873873, 4.74944562930846,
+  4.6918997353449, -4.55088073255655
+)
+hparam <- new("Hparam",
+  alpha1 = 0.567755037123148, alpha2 = 1.1870201935945,
+  delta = 2, ggamma = 2, bbeta = 3.39466184520673
+)
+qVec <- c(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
+ZOneDim <- sample(seq_len(m), n, replace = TRUE)
+constraint <- c(0, 0, 0)
+#'
+\donttest{
 generatePriorThetaY(m, n, p, muBar, hparam, qVec, ZOneDim, constraint)
-
+}
 
 }

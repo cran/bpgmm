@@ -7,13 +7,17 @@
 sumerizeZ(Zlist, index = 1:length(Zlist))
 }
 \arguments{
-\item{Zlist}{list of Z matrix}
+\item{Zlist}{Zlist}
 
-\item{index}{index of Zlist}
-}
-\value{
-count mode of Z matrix
+\item{index}{index}
 }
 \description{
 sumerizeZ
+}
+\examples{
+Zlist <- list(c(1, 2, 3), c(3, 2, 1), c(2, 2, 2))
+#'
+\donttest{
+sumerizeZ(Zlist)
+}
 }

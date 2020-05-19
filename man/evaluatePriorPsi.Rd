@@ -4,7 +4,7 @@
 \alias{evaluatePriorPsi}
 \title{evaluatePriorPsi}
 \usage{
-evaluatePriorPsi(psy, p, m, delta, bbeta, constraint)
+evaluatePriorPsi(psy, p, m, delta, bbeta, constraint, clusInd)
 }
 \arguments{
 \item{psy}{parameter}
@@ -18,10 +18,36 @@ evaluatePriorPsi(psy, p, m, delta, bbeta, constraint)
 \item{bbeta}{parameter}
 
 \item{constraint}{parameter}
-}
-\value{
-evaluated prior value for parameter Psi
+
+\item{clusInd}{cluster indicator vector}
 }
 \description{
 evaluate prior value for parameter Psi
+}
+\examples{
+p <- 10
+m <- 20
+delta <- 2
+bbeta <- 2
+constraint <- c(0, 0, 0)
+psy <- generatePriorPsi(
+  p,
+  m,
+  delta,
+  bbeta,
+  constraint
+)
+clusInd <- rep(1, m)
+#'
+\donttest{
+evaluatePriorPsi(
+  psy,
+  p,
+  m,
+  delta,
+  bbeta,
+  constraint,
+  clusInd
+)
+}
 }

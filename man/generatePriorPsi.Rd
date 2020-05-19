@@ -17,9 +17,23 @@ generatePriorPsi(p, m, delta, bbeta, constraint)
 
 \item{constraint}{the pgmm constraint, a vector of length three with binary entry. For example, c(1,1,1) means the fully constraint model}
 }
-\value{
-generated prior value for parameter Psi
-}
 \description{
 generate prior value for parameter Psi
+}
+\examples{
+p <- 10
+m <- 20
+delta <- 2
+bbeta <- 2
+constraint <- c(0, 0, 0)
+
+\donttest{
+generatePriorPsi(
+  p,
+  m,
+  delta,
+  bbeta,
+  constraint
+)
+}
 }

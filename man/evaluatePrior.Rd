@@ -4,7 +4,8 @@
 \alias{evaluatePrior}
 \title{evaluate Prior}
 \usage{
-evaluatePrior(m, p, muBar, hparam, thetaYList, ZOneDim, qVec, constraint)
+evaluatePrior(m, p, muBar, hparam, thetaYList, ZOneDim, qVec, constraint,
+  clusInd)
 }
 \arguments{
 \item{m}{m}
@@ -17,25 +18,47 @@ evaluatePrior(m, p, muBar, hparam, thetaYList, ZOneDim, qVec, constraint)
 
 \item{thetaYList}{theta Y list}
 
-\item{ZOneDim}{one dime of z}
+\item{ZOneDim}{one dim of z}
 
 \item{qVec}{q vector}
 
 \item{constraint}{type of constraint}
-}
-\value{
-evaluated prior value for parameter Theta and Y.
+
+\item{clusInd}{cluster indicator vector}
 }
 \description{
 evaluate prior value for parameter Theta and Y.
 }
 \examples{
+m <- 20
+n <- 500
+p <- 10
+muBar <- c(
+  -33.1342706763595, -35.2699639183419, 48.276928009445, 16.2370659601218,
+  19.0023163870536, -23.4900965314972, 37.1081269873873, 4.74944562930846,
+  4.6918997353449, -4.55088073255655
+)
+hparam <- new("Hparam",
+  alpha1 = 0.567755037123148, alpha2 = 1.1870201935945,
+  delta = 2, ggamma = 2, bbeta = 3.39466184520673
+)
+qVec <- c(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
+ZOneDim <- sample(seq_len(m), n, replace = TRUE)
+constraint <- c(0, 0, 0)
+thetaYList <- generatePriorThetaY(m, n, p, muBar, hparam, qVec, ZOneDim, constraint)
+clusInd <- rep(1, m)
+#'
 \donttest{
-url <- paste0("https://github.com/lzyacht/bpgmm-examples/",
-"blob/master/data/updatePostThetaY_example.RData?raw=true")
-download.file(url, destfile= "updatePostThetaY_example.RData", mode = "wb")
-load("updatePostThetaY_example.RData")
-evaluatePrior(m, p, muBar,hparam, thetaYList, ZOneDim, qVec,constraint)
+evaluatePrior(
+  m,
+  p,
+  muBar,
+  hparam,
+  thetaYList,
+  ZOneDim,
+  qVec,
+  constraint,
+  clusInd
+)
 }
-
 }

@@ -4,7 +4,7 @@
 \alias{evaluatePriorLambda}
 \title{evaluatePriorLambda}
 \usage{
-evaluatePriorLambda(p, m, alpha2, qVec, psy, lambda, constraint)
+evaluatePriorLambda(p, m, alpha2, qVec, psy, lambda, constraint, clusInd)
 }
 \arguments{
 \item{p}{the number of features}
@@ -20,10 +20,47 @@ evaluatePriorLambda(p, m, alpha2, qVec, psy, lambda, constraint)
 \item{lambda}{parameter}
 
 \item{constraint}{the pgmm constraint, a vector of length three with binary entry. For example, c(1,1,1) means the fully constraint model}
-}
-\value{
-evaluated prior value for parameter Lambda
+
+\item{clusInd}{cluster indicator vector}
 }
 \description{
 evaluate prior value for parameter Lambda
+}
+\examples{
+p <- 10
+m <- 20
+alpha2 <- 1.18
+qVec <- rep(4, m)
+delta <- 2
+bbeta <- 2
+constraint <- c(0, 0, 0)
+psy <- generatePriorPsi(
+  p,
+  m,
+  delta,
+  bbeta,
+  constraint
+)
+lambda <- generatePriorLambda(
+  p,
+  m,
+  alpha2,
+  qVec,
+  psy,
+  constraint
+)
+clusInd <- rep(1, m)
+#'
+\donttest{
+evaluatePriorLambda(
+  p,
+  m,
+  alpha2,
+  qVec,
+  psy,
+  lambda,
+  constraint,
+  clusInd
+)
+}
 }

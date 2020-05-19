@@ -17,3 +17,11 @@ result of ratio
 \description{
 Log scale ratio calculation
 }
+\examples{
+deno <- log(1)
+nume <- log(2)
+#'
+\donttest{
+calculateRatio(deno, nume)
+}
+}

@@ -7,11 +7,14 @@
 getmode(v)
 }
 \arguments{
-\item{v}{vec of numeric values}
-}
-\value{
-mode of the vec
+\item{v}{v}
 }
 \description{
 getmode
+}
+\examples{
+#'
+\donttest{
+getmode(c(1, 1, 2, 3))
+}
 }

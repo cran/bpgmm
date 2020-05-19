@@ -12,7 +12,7 @@ Rcpp::IntegerVector update_PostZ(
                      arma::mat X,
                      int m,
                      int n,
-                     Rcpp::S4 thetaYList ){
+                     Rcpp::S4 thetaYList){
 
   List lambda   = thetaYList.slot("lambda");
   List Y        = thetaYList.slot("Y");
@@ -20,10 +20,16 @@ Rcpp::IntegerVector update_PostZ(
   List psy      = thetaYList.slot("psy");
   arma::vec tao = thetaYList.slot("tao");
 
+
+
+
   arma::mat pMat(m, n);
   arma::mat dMat(m, n);
 
+ //   std::cout  << k << std::endl;
 
+
+//std::cout  << "1" << std::endl;
   for(int k = 0; k < m; k++ ){
     for(int i = 0; i < n; i++){
 
@@ -31,11 +37,25 @@ Rcpp::IntegerVector update_PostZ(
       arma::mat lambdak = lambda(k);
       arma::mat psyk = psy(k);
       arma::mat var = psyk + lambdak * trans(lambdak);
+       // std::cout  << k << std::endl;
       arma::vec temp = dmvnrm_arma(trans(X.col(i)), trans(Mk), var, true);
       dMat(k, i) = temp.at(0);
+    // try {
+    //   arma::vec temp = dmvnrm_arma(trans(X.col(i)), trans(Mk), var, true);
+    //   dMat(k, i) = temp.at(0);
+    // } catch(const std::exception & e){
+    //     dMat(k, i) = -100000;
+    // }
+
+
+    //  dMat(k, i) = temp.at(0);
     }
   }
-
+    // std::cout  << dMat(0, 0) << std::endl;
+//     std::cout  << dMat(1, 0) << std::endl;
+//     std::cout  << dMat(2, 0) << std::endl;
+//     std::cout  << dMat(3, 0) << std::endl;
+//   std::cout  << "2" << std::endl;
   for(int k = 0; k < m; k++ ){
     double taok = tao(k);
     arma::vec taokvec = rep(taok, n);

@@ -22,6 +22,5 @@ An S4 class to represent a Hyper parameter.
 }}
 
 \examples{
-new("Hparam", alpha1=1, alpha2=2, bbeta=3, delta=4, ggamma=5)
-
+new("Hparam", alpha1 = 1, alpha2 = 2, bbeta = 3, delta = 4, ggamma = 5)
 }
