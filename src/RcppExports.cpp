@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // Calculate_Cxy
 Rcpp::List Calculate_Cxy(int m, int n, Rcpp::S4 hparam, Rcpp::S4 thetaYList, arma::vec ZOneDim, arma::vec qVec, arma::mat X);
 RcppExport SEXP _bpgmm_Calculate_Cxy(SEXP mSEXP, SEXP nSEXP, SEXP hparamSEXP, SEXP thetaYListSEXP, SEXP ZOneDimSEXP, SEXP qVecSEXP, SEXP XSEXP) {
