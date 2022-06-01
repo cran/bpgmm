@@ -74,7 +74,7 @@ Rcpp::List Calculate_PostLambdaPsy(int m,
   // arma::vec test_norm;
   // test_norm = rmvnorm(_["n"] = 1, _["mean"]=arma::vec(1), _["sigma"]=arma::vec(1));
 
-  if ((constraint[0] == 1) & (constraint[1] == 1) & (constraint[2] == 1)) {
+  if ((constraint[0] == 1) && (constraint[1] == 1) && (constraint[2] == 1)) {
     // std::cout << "Model 1" << std::endl;
     // Model 1
     sumCxmyk = sumCxmyk.zeros();
@@ -225,7 +225,7 @@ Rcpp::List Calculate_PostLambdaPsy(int m,
 
     return(res);
 
-  } else if ((constraint[0] == 1) & (constraint[1] == 1) & (constraint[2] == 0)) {
+  } else if ((constraint[0] == 1) && (constraint[1] == 1) && (constraint[2] == 0)) {
     // std::cout << "Model 2" << std::endl;
 
     // Model 2
@@ -378,7 +378,7 @@ Rcpp::List Calculate_PostLambdaPsy(int m,
                                   Named("psy")    = post_psy);
 
     return(res);
-  } else if ((constraint[0] == 1) & (constraint[1] == 0) & (constraint[2] == 1)) {
+  } else if ((constraint[0] == 1) && (constraint[1] == 0) && (constraint[2] == 1)) {
     // std::cout << "Model 3" << std::endl;
     arma::mat Cxmyk_0 = Cxmyk[0];
     arma::mat Cyyk_0 = Cyyk[0];
@@ -539,7 +539,7 @@ Rcpp::List Calculate_PostLambdaPsy(int m,
 
     return(res);
 
-  } else if ((constraint[0] == 1) & (constraint[1] == 0) & (constraint[2] == 0)) {
+  } else if ((constraint[0] == 1) && (constraint[1] == 0) && (constraint[2] == 0)) {
     // std::cout << "Model 4" << std::endl;
     arma::mat sumVar;
     arma::mat B;
@@ -715,7 +715,7 @@ Rcpp::List Calculate_PostLambdaPsy(int m,
 
     return(res);
 
-  } else if ((constraint[0] == 0) & (constraint[1] == 1) & (constraint[2] == 1)) {
+  } else if ((constraint[0] == 0) && (constraint[1] == 1) && (constraint[2] == 1)) {
     // std::cout << "Model 5" << std::endl;
     for (int k=0; k<m; ++k) {
 
@@ -855,7 +855,7 @@ Rcpp::List Calculate_PostLambdaPsy(int m,
     return(res);
 
 
-  } else if ((constraint[0] == 0) & (constraint[1] == 1) & (constraint[2] == 0)) {
+  } else if ((constraint[0] == 0) && (constraint[1] == 1) && (constraint[2] == 0)) {
     // std::cout << "Model 6" << std::endl;
 
     for (int k=0; k<m; ++k) {
@@ -993,7 +993,7 @@ Rcpp::List Calculate_PostLambdaPsy(int m,
 
     return(res);
 
-  } else if ((constraint[0] == 0) & (constraint[1] == 0) & (constraint[2] == 1)) {
+  } else if ((constraint[0] == 0) && (constraint[1] == 0) && (constraint[2] == 1)) {
     // std::cout << "Model 7" << std::endl;
 
 
@@ -1101,7 +1101,7 @@ Rcpp::List Calculate_PostLambdaPsy(int m,
 
     return(res);
 
-  } else if ((constraint[0] == 0) & (constraint[1] == 0) & (constraint[2] == 0)) {
+  } else if ((constraint[0] == 0) && (constraint[1] == 0) && (constraint[2] == 0)) {
     // std::cout << "Model 8" << std::endl;
 
     for (int k=0; k<m; ++k) {
