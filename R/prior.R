@@ -11,28 +11,6 @@
 #' @param qVec the vector of the number of factors in each clusters
 #' @param ZOneDim ZOneDim
 #' @param constraint constraint
-#' @examples
-#' m <- 20
-#' n <- 500
-#' p <- 10
-#' muBar <- c(
-#'   -33.1342706763595, -35.2699639183419, 48.276928009445, 16.2370659601218,
-#'   19.0023163870536, -23.4900965314972, 37.1081269873873, 4.74944562930846,
-#'   4.6918997353449, -4.55088073255655
-#' )
-#' hparam <- new("Hparam",
-#'   alpha1 = 0.567755037123148, alpha2 = 1.1870201935945,
-#'   delta = 2, ggamma = 2, bbeta = 3.39466184520673
-#' )
-#' qVec <- c(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
-#' ZOneDim <- sample(seq_len(m), n, replace = TRUE)
-#' constraint <- c(0, 0, 0)
-#' #'
-#' \donttest{
-#' generatePriorThetaY(m, n, p, muBar, hparam, qVec, ZOneDim, constraint)
-#' }
-#'
-#' @export
 generatePriorThetaY <- function(m,
                                 n,
                                 p,
@@ -88,52 +66,8 @@ generatePriorThetaY <- function(m,
   )
 }
 
-#' evaluate Prior
-#' @description evaluate prior value for parameter Theta and Y.
-#' @importFrom gtools ddirichlet
-#' @importFrom mvtnorm dmvnorm
-#' @import stats
-#' @param m m
-#' @param p p
-#' @param muBar mu_bar
-#' @param hparam hyper parameter class
-#' @param thetaYList theta Y list
-#' @param ZOneDim one dim of z
-#' @param qVec q vector
-#' @param constraint type of constraint
-#' @param clusInd cluster indicator vector
-#' @examples
-#' m <- 20
-#' n <- 500
-#' p <- 10
-#' muBar <- c(
-#'   -33.1342706763595, -35.2699639183419, 48.276928009445, 16.2370659601218,
-#'   19.0023163870536, -23.4900965314972, 37.1081269873873, 4.74944562930846,
-#'   4.6918997353449, -4.55088073255655
-#' )
-#' hparam <- new("Hparam",
-#'   alpha1 = 0.567755037123148, alpha2 = 1.1870201935945,
-#'   delta = 2, ggamma = 2, bbeta = 3.39466184520673
-#' )
-#' qVec <- c(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
-#' ZOneDim <- sample(seq_len(m), n, replace = TRUE)
-#' constraint <- c(0, 0, 0)
-#' thetaYList <- generatePriorThetaY(m, n, p, muBar, hparam, qVec, ZOneDim, constraint)
-#' clusInd <- rep(1, m)
-#' #'
-#' \donttest{
-#' evaluatePrior(
-#'   m,
-#'   p,
-#'   muBar,
-#'   hparam,
-#'   thetaYList,
-#'   ZOneDim,
-#'   qVec,
-#'   constraint,
-#'   clusInd
-#' )
-#' }
+#' (internal)
+#' @noRd
 evaluatePrior <- function(m,
                           p,
                           muBar,
@@ -213,24 +147,7 @@ evaluatePrior <- function(m,
 #' @param delta hyperparameters
 #' @param bbeta hyperparameters
 #' @param constraint the pgmm constraint, a vector of length three with binary entry. For example, c(1,1,1) means the fully constraint model
-#' @export
 #'
-#' @examples
-#' p <- 10
-#' m <- 20
-#' delta <- 2
-#' bbeta <- 2
-#' constraint <- c(0, 0, 0)
-#'
-#' \donttest{
-#' generatePriorPsi(
-#'   p,
-#'   m,
-#'   delta,
-#'   bbeta,
-#'   constraint
-#' )
-#' }
 generatePriorPsi <- function(p,
                              m,
                              delta,
@@ -268,43 +185,8 @@ generatePriorPsi <- function(p,
   return(psy)
 }
 
-#' evaluatePriorPsi
-#'
-#' @description evaluate prior value for parameter Psi
-#' @import stats
-#' @param psy parameter
-#' @param p the number of features
-#' @param m the number of clusters
-#' @param delta parameter
-#' @param bbeta parameter
-#' @param constraint parameter
-#' @param clusInd cluster indicator vector
-#' @examples
-#' p <- 10
-#' m <- 20
-#' delta <- 2
-#' bbeta <- 2
-#' constraint <- c(0, 0, 0)
-#' psy <- generatePriorPsi(
-#'   p,
-#'   m,
-#'   delta,
-#'   bbeta,
-#'   constraint
-#' )
-#' clusInd <- rep(1, m)
-#' #'
-#' \donttest{
-#' evaluatePriorPsi(
-#'   psy,
-#'   p,
-#'   m,
-#'   delta,
-#'   bbeta,
-#'   constraint,
-#'   clusInd
-#' )
-#' }
+#' (internal)
+#' @noRd
 evaluatePriorPsi <- function(psy,
                              p,
                              m,
@@ -353,34 +235,7 @@ evaluatePriorPsi <- function(psy,
 #' @param qVec parameter
 #' @param psy parameter
 #' @param constraint parameter
-#' @export
 #'
-#' @examples
-#' p <- 10
-#' m <- 20
-#' alpha2 <- 1.18
-#' qVec <- rep(4, m)
-#' delta <- 2
-#' bbeta <- 2
-#' constraint <- c(0, 0, 0)
-#' psy <- generatePriorPsi(
-#'   p,
-#'   m,
-#'   delta,
-#'   bbeta,
-#'   constraint
-#' )
-#' #'
-#' \donttest{
-#' generatePriorLambda(
-#'   p,
-#'   m,
-#'   alpha2,
-#'   qVec,
-#'   psy,
-#'   constraint
-#' )
-#' }
 generatePriorLambda <- function(p,
                                 m,
                                 alpha2,
@@ -430,55 +285,8 @@ generatePriorLambda <- function(p,
   return(lambda)
 }
 
-#' evaluatePriorLambda
-#'
-#' @description evaluate prior value for parameter Lambda
-#' @importFrom mvtnorm dmvnorm
-#' @param p the number of features
-#' @param m the number of clusters
-#' @param alpha2 hyper parameter
-#' @param qVec the vector of the number of factors in each clusters
-#' @param psy parameter
-#' @param lambda parameter
-#' @param constraint the pgmm constraint, a vector of length three with binary entry. For example, c(1,1,1) means the fully constraint model
-#' @param clusInd cluster indicator vector
-#' @examples
-#' p <- 10
-#' m <- 20
-#' alpha2 <- 1.18
-#' qVec <- rep(4, m)
-#' delta <- 2
-#' bbeta <- 2
-#' constraint <- c(0, 0, 0)
-#' psy <- generatePriorPsi(
-#'   p,
-#'   m,
-#'   delta,
-#'   bbeta,
-#'   constraint
-#' )
-#' lambda <- generatePriorLambda(
-#'   p,
-#'   m,
-#'   alpha2,
-#'   qVec,
-#'   psy,
-#'   constraint
-#' )
-#' clusInd <- rep(1, m)
-#' #'
-#' \donttest{
-#' evaluatePriorLambda(
-#'   p,
-#'   m,
-#'   alpha2,
-#'   qVec,
-#'   psy,
-#'   lambda,
-#'   constraint,
-#'   clusInd
-#' )
-#' }
+#' (internal)
+#' @noRd
 evaluatePriorLambda <- function(p,
                                 m,
                                 alpha2,

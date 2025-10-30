@@ -15,42 +15,6 @@
 #' @param Mstep the indicator of whether do model selection on the number of clusters
 #' @param Vstep the indicator of whether do model selection on variance structures
 #' @param SCind the indicator of whether use split/combine step in Mstep
-#' @examples
-#'
-#'
-#' library("fabMix")
-#' library("mclust")
-#' library("pgmm")
-#' library("mvtnorm")
-#' library("mcmcse")
-#' library("MASS")
-#' library("gtools")
-#' n <- 500
-#' p <- 10
-#' q <- 4
-#' K <- 10
-#' nsim <- 10
-#' burn <- 20
-#' qnew <- 4
-#' Mstep <- 1
-#' Vstep <- 1
-#' constraint <- c(0, 0, 0)
-#' mInit <- 20
-#' mVec <- c(1, 20)
-#' X <- t(simData(
-#'   sameLambda = TRUE,
-#'   sameSigma = TRUE,
-#'   K.true = K, n = n, q = q, p = p, sINV_values = 1 / ((1:p))
-#' )$data)
-#' \donttest{
-#' pgmmRJMCMC(X,
-#'   mInit, mVec, qnew,
-#'   niter = nsim, burn = burn,
-#'   constraint = constraint, Mstep = Mstep, Vstep = Vstep
-#' )
-#' }
-#'
-#' @export
 
 pgmmRJMCMC <- function(X,
                        mInit,

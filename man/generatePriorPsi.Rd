@@ -20,20 +20,3 @@ generatePriorPsi(p, m, delta, bbeta, constraint)
 \description{
 generate prior value for parameter Psi
 }
-\examples{
-p <- 10
-m <- 20
-delta <- 2
-bbeta <- 2
-constraint <- c(0, 0, 0)
-
-\donttest{
-generatePriorPsi(
-  p,
-  m,
-  delta,
-  bbeta,
-  constraint
-)
-}
-}

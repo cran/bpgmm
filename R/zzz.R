@@ -1,3 +1,5 @@
+#' (internal)
+#' @noRd
 .onAttch <- function(libname, pkgname) {
   packageStartupMessage(paste(
     "\nThis is bpgmm version",

@@ -22,30 +22,3 @@ generatePriorLambda(p, m, alpha2, qVec, psy, constraint)
 \description{
 evaluate prior value for parameter Lambda
 }
-\examples{
-p <- 10
-m <- 20
-alpha2 <- 1.18
-qVec <- rep(4, m)
-delta <- 2
-bbeta <- 2
-constraint <- c(0, 0, 0)
-psy <- generatePriorPsi(
-  p,
-  m,
-  delta,
-  bbeta,
-  constraint
-)
-#'
-\donttest{
-generatePriorLambda(
-  p,
-  m,
-  alpha2,
-  qVec,
-  psy,
-  constraint
-)
-}
-}

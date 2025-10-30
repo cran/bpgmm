@@ -4,9 +4,22 @@
 \alias{pgmmRJMCMC}
 \title{bpgmm Model-Based Clustering Using Baysian PGMM Carries out model-based clustering using parsimonious Gaussian mixture models. MCMC are used for parameter estimation. The RJMCMC is used for model selection.}
 \usage{
-pgmmRJMCMC(X, mInit, mVec, qnew, delta = 2, ggamma = 2, burn = 20,
-  niter = 1000, constraint = C(0, 0, 0), dVec = c(1, 1, 1),
-  sVec = c(1, 1, 1), Mstep = 0, Vstep = 0, SCind = 0)
+pgmmRJMCMC(
+  X,
+  mInit,
+  mVec,
+  qnew,
+  delta = 2,
+  ggamma = 2,
+  burn = 20,
+  niter = 1000,
+  constraint = C(0, 0, 0),
+  dVec = c(1, 1, 1),
+  sVec = c(1, 1, 1),
+  Mstep = 0,
+  Vstep = 0,
+  SCind = 0
+)
 }
 \arguments{
 \item{X}{the observation matrix with size p * m}
@@ -39,40 +52,4 @@ pgmmRJMCMC(X, mInit, mVec, qnew, delta = 2, ggamma = 2, burn = 20,
 }
 \description{
 bpgmm Model-Based Clustering Using Baysian PGMM Carries out model-based clustering using parsimonious Gaussian mixture models. MCMC are used for parameter estimation. The RJMCMC is used for model selection.
-}
-\examples{
-
-
-library("fabMix")
-library("mclust")
-library("pgmm")
-library("mvtnorm")
-library("mcmcse")
-library("MASS")
-library("gtools")
-n <- 500
-p <- 10
-q <- 4
-K <- 10
-nsim <- 10
-burn <- 20
-qnew <- 4
-Mstep <- 1
-Vstep <- 1
-constraint <- c(0, 0, 0)
-mInit <- 20
-mVec <- c(1, 20)
-X <- t(simData(
-  sameLambda = TRUE,
-  sameSigma = TRUE,
-  K.true = K, n = n, q = q, p = p, sINV_values = 1 / ((1:p))
-)$data)
-\donttest{
-pgmmRJMCMC(X,
-  mInit, mVec, qnew,
-  niter = nsim, burn = burn,
-  constraint = constraint, Mstep = Mstep, Vstep = Vstep
-)
-}
-
 }
