@@ -1,8 +1,11 @@
 #' (internal)
 #' @noRd
-.onAttch <- function(libname, pkgname) {
-  packageStartupMessage(paste(
-    "\nThis is bpgmm version",
-    utils::packageVersion("bpgmm")
-  ))
+.onAttach <- function(libname, pkgname) {
+  packageStartupMessage(
+    paste0(
+      "bpgmm ",
+      utils::packageVersion("bpgmm"),
+      " loaded. If you use bpgmm in published work, please cite it with citation(\"bpgmm\")."
+    )
+  )
 }

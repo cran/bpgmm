@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Worked examples</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Worked examples</h1>
+
+
+
+<p>This example gives a complete, runnable <code>bpgmm</code> analysis.
+It is small enough to build quickly on CRAN and pkgdown, but it uses the
+same functions as a larger analysis. The focus is the structure of one
+fitted object; model-selection interpretation is handled separately.</p>
+<div id="simulate-a-small-clustering-problem" class="section level2">
+<h2>Simulate a small clustering problem</h2>
+<p><code>pgmm_rjmcmc()</code> expects a numeric matrix with variables in
+rows and observations in columns. The code below creates two
+well-separated clusters in two dimensions.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(bpgmm)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">8</span>, <span class="at">mean =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.2</span>), <span class="at">nrow =</span> <span class="dv">2</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">8</span>, <span class="at">mean =</span> <span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.2</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>known_labels <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> <span class="dv">4</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">dim</span>(X)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; [1] 2 8</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>known_labels</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; [1] 1 1 1 1 2 2 2 2</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>cluster_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#009E73&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  X[<span class="dv">1</span>, ], X[<span class="dv">2</span>, ],</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="at">col =</span> cluster_cols[known_labels],</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Variable 1&quot;</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Variable 2&quot;</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;Simulated data&quot;</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  <span class="at">asp =</span> <span class="dv">1</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>)</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="fu">legend</span>(</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>  <span class="st">&quot;topleft&quot;</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">paste</span>(<span class="st">&quot;Known&quot;</span>, <span class="fu">sort</span>(<span class="fu">unique</span>(known_labels))),</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>  <span class="at">col =</span> cluster_cols[<span class="fu">sort</span>(<span class="fu">unique</span>(known_labels))],</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">&quot;n&quot;</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>)</span></code></pre></div>
+<p><img role="img" aria-label="Scatter plot of simulated observations colored by known cluster." src="data:image/png;base64,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" alt="Scatter plot of simulated observations colored by known cluster." /></p>
+</div>
+<div id="fit-a-fixed-model-chain" class="section level2">
+<h2>Fit a fixed-model chain</h2>
+<p>This fit keeps <span class="math inline">\(m\)</span> and the
+covariance model fixed, so the output structure is explicit. The fitted
+likelihood contribution is</p>
+<p><span class="math display">\[
+p(x_i \mid z_i = k, \Theta) =
+N_p(x_i \mid \mu_k, \Lambda_k\Lambda_k^\top + \Psi_k).
+\]</span></p>
+<p>For model selection across <span class="math inline">\(m\)</span> and
+covariance labels, use the separate model-selection vignette.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>fit_log <span class="ot">&lt;-</span> <span class="fu">capture.output</span>({</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">pgmm_rjmcmc</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    <span class="at">X =</span> X,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="at">m_init =</span> <span class="dv">2</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="at">m_range =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="at">q_new =</span> <span class="dv">1</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>    <span class="at">burn =</span> <span class="dv">1</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>    <span class="at">niter =</span> <span class="dv">3</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>    <span class="at">constraint =</span> <span class="st">&quot;UUU&quot;</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>    <span class="at">m_step =</span> <span class="dv">0</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>    <span class="at">v_step =</span> <span class="dv">0</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>  )</span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>})</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="fu">tail</span>(fit_log, <span class="dv">1</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; character(0)</span></span></code></pre></div>
+<p>The returned object stores posterior samples for allocations,
+covariance constraints, component parameters, and hyperparameters.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">names</span>(fit)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;tau_samples&quot;            &quot;psi_samples&quot;            &quot;mean_samples&quot;          </span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;  [4] &quot;lambda_samples&quot;         &quot;factor_score_samples&quot;   &quot;allocation_samples&quot;    </span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;constraint_samples&quot;     &quot;alpha1_samples&quot;         &quot;alpha2_samples&quot;        </span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; [10] &quot;beta_samples&quot;           &quot;active_cluster_samples&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="fu">length</span>(fit<span class="sc">$</span>allocation_samples)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
+</div>
+<div id="summarize-posterior-samples" class="section level2">
+<h2>Summarize posterior samples</h2>
+<p><code>summarize_pgmm_rjmcmc()</code> returns the modal allocation,
+posterior counts for the number of clusters, posterior counts for
+covariance models, and optionally an adjusted Rand index.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>fit_summary <span class="ot">&lt;-</span> <span class="fu">summarize_pgmm_rjmcmc</span>(fit, <span class="at">true_cluster =</span> known_labels)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>fit_summary<span class="sc">$</span>allocation</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; [1] 2 2 2 2 1 1 1 1</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>fit_summary<span class="sc">$</span>n_clusters</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; 2 </span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; 3</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>fit_summary<span class="sc">$</span>n_constraints</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; UUU </span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt;   3</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>fit_summary<span class="sc">$</span>ari</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<p>The modal allocation is computed coordinate-wise from the saved
+posterior allocations:</p>
+<p><span class="math display">\[
+\hat{z}_i = \operatorname{mode}\{z_i^{(1)},\ldots,z_i^{(S)}\},
+\]</span></p>
+<p>where <span class="math inline">\(S\)</span> is the number of saved
+posterior samples.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>old_par <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  X[<span class="dv">1</span>, ], X[<span class="dv">2</span>, ],</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">col =</span> cluster_cols[known_labels],</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Variable 1&quot;</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Variable 2&quot;</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;Known labels&quot;</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="at">asp =</span> <span class="dv">1</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>)</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>  X[<span class="dv">1</span>, ], X[<span class="dv">2</span>, ],</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>  <span class="at">col =</span> cluster_cols[fit_summary<span class="sc">$</span>allocation],</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Variable 1&quot;</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Variable 2&quot;</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;Posterior allocation&quot;</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>  <span class="at">asp =</span> <span class="dv">1</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>)</span></code></pre></div>
+<p><img role="img" aria-label="Two-panel plot comparing known labels and posterior allocation." src="data:image/png;base64,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" alt="Two-panel plot comparing known labels and posterior allocation." /></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">par</span>(old_par)</span></code></pre></div>
+</div>
+<div id="inspect-component-parameters" class="section level2">
+<h2>Inspect component parameters</h2>
+<p>The sampler stores draws of <span class="math inline">\(\tau_k\)</span>, <span class="math inline">\(\mu_k\)</span>, <span class="math inline">\(\Lambda_k\)</span>, and <span class="math inline">\(\Psi_k\)</span>. For this fixed-model example, the
+final saved draw is enough to show the object shape.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>last <span class="ot">&lt;-</span> <span class="fu">length</span>(fit<span class="sc">$</span>tau_samples)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>fit<span class="sc">$</span>tau_samples[[last]]</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; [1] 0.1844265 0.8155735 0.0000000</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>fit<span class="sc">$</span>mean_samples[[last]]</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;          [,1]     [,2]</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; [1,] 1.285546 1.767347</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt;           [,1]      [,2]</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt; [1,] -2.023394 -2.231323</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="fu">lapply</span>(fit<span class="sc">$</span>lambda_samples[[last]], dim)</span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt; [1] 2 1</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; [1] 2 1</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="fu">lapply</span>(fit<span class="sc">$</span>psi_samples[[last]], dim)</span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#&gt; [1] 2 2</span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt; [1] 2 2</span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
+</div>
+<div id="scale-the-example-to-real-data" class="section level2">
+<h2>Scale the example to real data</h2>
+<p>For an applied analysis, keep the same sequence of steps but use
+larger sampler settings. The exact values depend on data size and
+convergence diagnostics.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">pgmm_rjmcmc</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="at">X =</span> your_data_matrix,</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="at">m_init =</span> <span class="dv">2</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="at">m_range =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>),</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="at">q_new =</span> <span class="dv">4</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="at">burn =</span> <span class="dv">5000</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">15000</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="at">constraint =</span> <span class="fu">model_to_constraint</span>(<span class="st">&quot;UUU&quot;</span>),</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  <span class="at">m_step =</span> <span class="dv">1</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  <span class="at">v_step =</span> <span class="dv">1</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  <span class="at">split_combine =</span> <span class="dv">1</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>)</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="fu">summarize_pgmm_rjmcmc</span>(fit, <span class="at">true_cluster =</span> known_labels)</span></code></pre></div>
+</div>
+<div id="what-to-report" class="section level2">
+<h2>What to report</h2>
+<p>For a concise analysis report, include:</p>
+<ul>
+<li>the data orientation and preprocessing choices;</li>
+<li><code>m_range</code>, <code>q_new</code>, starting covariance model,
+and whether <code>m_step</code>, <code>v_step</code>, and
+<code>split_combine</code> were enabled;</li>
+<li>the number of burn-in and posterior iterations;</li>
+<li>the posterior modal allocation or a co-clustering matrix;</li>
+<li>ARI only when a reference partition is scientifically
+meaningful.</li>
+</ul>
+<p>The diagnostics vignette gives examples of trace plots and
+co-clustering summaries for multiple chains.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

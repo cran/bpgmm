@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Preparing data and choosing sampler settings</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Preparing data and choosing sampler
+settings</h1>
+
+
+
+<p>Before calling <code>pgmm_rjmcmc()</code>, the analyst must specify
+the data orientation, scaling, missing-value handling, latent-factor
+dimension, cluster range, and starting covariance model.</p>
+<div id="matrix-orientation" class="section level2">
+<h2>Matrix orientation</h2>
+<p><code>bpgmm</code> expects a numeric matrix with variables in rows
+and observations in columns. Many R data sets use the opposite
+convention, so transpose after selecting numeric variables.</p>
+<p>The package convention is</p>
+<p><span class="math display">\[
+X =
+\begin{bmatrix}
+x_{11} &amp; \cdots &amp; x_{1n} \\
+\vdots &amp;        &amp; \vdots \\
+x_{p1} &amp; \cdots &amp; x_{pn}
+\end{bmatrix},
+\]</span></p>
+<p>where row <span class="math inline">\(j\)</span> is variable <span class="math inline">\(j\)</span> and column <span class="math inline">\(i\)</span> is observation <span class="math inline">\(x_i\)</span>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(bpgmm)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; bpgmm 1.3.1 loaded. If you use bpgmm in published work, please cite it with citation(&quot;bpgmm&quot;).</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>iris_numeric <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(iris[, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>])</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>iris_labels <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(iris<span class="sc">$</span>Species)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">dim</span>(iris_numeric)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; [1] 150   4</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">t</span>(iris_numeric)</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">dim</span>(X)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; [1]   4 150</span></span></code></pre></div>
+<p>Rows now correspond to variables and columns correspond to
+observations.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">rownames</span>(X)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Sepal.Length&quot; &quot;Sepal.Width&quot;  &quot;Petal.Length&quot; &quot;Petal.Width&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>X[, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;              [,1] [,2] [,3]</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; Sepal.Length  5.1  4.9  4.7</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; Sepal.Width   3.5  3.0  3.2</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; Petal.Length  1.4  1.4  1.3</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; Petal.Width   0.2  0.2  0.2</span></span></code></pre></div>
+</div>
+<div id="check-finite-numeric-inputs" class="section level2">
+<h2>Check finite numeric inputs</h2>
+<p>The sampler requires finite numeric values. Handle missing values
+before fitting. Common choices include complete-case filtering,
+domain-specific imputation, or fitting the model to a subset of
+variables with reliable measurements.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">is.finite</span>(X))</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">storage.mode</span>(X)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;double&quot;</span></span></code></pre></div>
+</div>
+<div id="scale-variables" class="section level2">
+<h2>Scale variables</h2>
+<p>Mixture models are sensitive to measurement scale. If variables are
+measured in different units, standardizing each variable is usually a
+sensible default. For each variable <span class="math inline">\(j\)</span>, the usual transformation is</p>
+<p><span class="math display">\[
+x_{ji}^{\mathrm{scaled}} =
+\frac{x_{ji} - \bar{x}_{j\cdot}}{s_j},
+\qquad
+s_j^2 = \frac{1}{n - 1}\sum_{i=1}^n
+(x_{ji} - \bar{x}_{j\cdot})^2 .
+\]</span></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>X_scaled <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">scale</span>(<span class="fu">t</span>(X)))</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">rowMeans</span>(X_scaled), <span class="dv">6</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width </span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;            0            0            0            0</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">apply</span>(X_scaled, <span class="dv">1</span>, sd), <span class="dv">6</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width </span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;            1            1            1            1</span></span></code></pre></div>
+<p>The package does not scale internally because some scientific
+applications need the original measurement scale. Scaling should be an
+explicit analysis choice.</p>
+</div>
+<div id="choose-q_new" class="section level2">
+<h2>Choose <code>q_new</code></h2>
+<p><code>q_new</code> is the latent-factor dimension assigned to newly
+proposed clusters. It controls the dimension of the factor-analyzer part
+of the covariance model. In the paper’s notation,</p>
+<p><span class="math display">\[
+\Lambda_k \in \mathbb{R}^{p \times q_k}, \qquad
+y_{ki} \in \mathbb{R}^{q_k}.
+\]</span></p>
+<p>The package uses <code>q_new</code> as the <span class="math inline">\(q_k\)</span> value for a newly created
+component.</p>
+<p>Useful starting points:</p>
+<ul>
+<li><code>q_new = 1</code> for very small examples or when covariance
+structure should be simple.</li>
+<li><code>q_new = 2</code> or <code>3</code> for moderate-dimensional
+data.</li>
+<li>Larger values only when the number of variables and observations
+support the extra covariance flexibility.</li>
+</ul>
+<p>The value should be smaller than the number of observed
+variables.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X_scaled)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>q_new <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="dv">2</span>, p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>q_new</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span></code></pre></div>
+</div>
+<div id="choose-m_range" class="section level2">
+<h2>Choose <code>m_range</code></h2>
+<p><code>m_range</code> is the allowed cluster-number range. A wide
+range gives RJMCMC more freedom, but also increases the model space.
+Start with a scientifically reasonable range, then assess
+sensitivity.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>m_init <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>m_range <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>)</span></code></pre></div>
+<p>For data with a known reference label, such as <code>iris</code>, the
+reference partition gives a simple check on the range. In unsupervised
+applications, use domain knowledge and exploratory plots.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>species_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#009E73&quot;</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  X_scaled[<span class="dv">1</span>, ], X_scaled[<span class="dv">2</span>, ],</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">col =</span> species_cols[iris_labels],</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="fu">rownames</span>(X_scaled)[<span class="dv">1</span>],</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="fu">rownames</span>(X_scaled)[<span class="dv">2</span>],</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;Scaled iris data&quot;</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="at">asp =</span> <span class="dv">1</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>)</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="fu">legend</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  <span class="st">&quot;topleft&quot;</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">levels</span>(iris<span class="sc">$</span>Species),</span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>  <span class="at">col =</span> species_cols,</span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">&quot;n&quot;</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>)</span></code></pre></div>
+<p><img role="img" aria-label="Scatter plot of scaled iris variables colored by species." src="data:image/png;base64,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" alt="Scatter plot of scaled iris variables colored by species." /></p>
+</div>
+<div id="choose-the-starting-covariance-model" class="section level2">
+<h2>Choose the starting covariance model</h2>
+<p>The three-letter model labels describe whether loading matrices and
+noise covariances are shared across clusters. <code>UUU</code> is
+flexible; <code>CCC</code> is more constrained. A flexible starting
+model is often reasonable when using <code>v_step = 1</code>, because
+the sampler can move across covariance structures.</p>
+<p>The fitted covariance is always</p>
+<p><span class="math display">\[
+\Sigma_k = \Lambda_k\Lambda_k^\top + \Psi_k,
+\]</span></p>
+<p>but the label controls whether <span class="math inline">\(\Lambda_k\)</span> and <span class="math inline">\(\Psi_k\)</span> are shared and whether <span class="math inline">\(\Psi_k\)</span> is isotropic or diagonal.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">model_to_constraint</span>(<span class="st">&quot;UUU&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; [1] 0 0 0</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">constraint_to_model</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;CCC&quot;</span></span></code></pre></div>
+</div>
+<div id="a-prepared-call" class="section level2">
+<h2>A prepared call</h2>
+<p>The call below is not evaluated in the vignette because applied
+analyses should use longer chains and repeated runs. It records how the
+prepared objects enter the package interface.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">pgmm_rjmcmc</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="at">X =</span> X_scaled,</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="at">m_init =</span> m_init,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="at">m_range =</span> m_range,</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="at">q_new =</span> q_new,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="at">burn =</span> <span class="dv">1000</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">5000</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="at">constraint =</span> <span class="st">&quot;UUU&quot;</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  <span class="at">m_step =</span> <span class="dv">1</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  <span class="at">v_step =</span> <span class="dv">1</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  <span class="at">split_combine =</span> <span class="dv">1</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>)</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="fu">summarize_pgmm_rjmcmc</span>(fit, <span class="at">true_cluster =</span> iris_labels)</span></code></pre></div>
+</div>
+<div id="practical-checklist" class="section level2">
+<h2>Practical checklist</h2>
+<p>Before fitting:</p>
+<ul>
+<li>verify that <code>X</code> is numeric with variables in rows;</li>
+<li>remove or impute missing and non-finite values;</li>
+<li>decide whether variables should be scaled;</li>
+<li>choose a scientifically plausible <code>m_range</code>;</li>
+<li>choose <code>q_new</code> smaller than the number of variables;</li>
+<li>use multiple chains for applied analyses.</li>
+</ul>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

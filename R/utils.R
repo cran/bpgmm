@@ -1,6 +1,7 @@
 #' (internal)
 #' @noRd
-getZmat <- function(ZOneDim, m, n) {
+#' @noRd
+get_z_mat_r <- function(ZOneDim, m, n) {
   Zmat <- matrix(NA, m, n)
   for (i in 1:m) {
     Zmat[i, ] <- as.numeric(ZOneDim == i)
@@ -10,7 +11,8 @@ getZmat <- function(ZOneDim, m, n) {
 
 #' (internal)
 #' @noRd
-calculateRatio <- function(deno, nume) {
+#' @noRd
+calculate_ratio <- function(deno, nume) {
   ## deno nume both in log scale
   maxNume <- max(nume)
   transDeno <- deno - maxNume
@@ -22,17 +24,15 @@ calculateRatio <- function(deno, nume) {
 
 #' (internal)
 #' @noRd
-listToStrVec <- function(stringList) {
-  for (i in 1:length(stringList)) {
-    stringList[[i]] <-
-      paste0("(", paste0(stringList[[i]], collapse = ""), ")")
-  }
-  unlist(stringList)
+#' @noRd
+constraint_list_to_models <- function(stringList) {
+  vapply(stringList, constraint_to_model, character(1))
 }
 
 
 
 #' (internal)
+#' @noRd
 #' @noRd
 likelihood <- function(thetaYList, ZOneDim, qqVec, muBar, X) {
   m <- length(qqVec)
@@ -60,26 +60,39 @@ likelihood <- function(thetaYList, ZOneDim, qqVec, muBar, X) {
   # xvec
 }
 
-#' (internal)
+#' Summarize cluster allocations by posterior mode.
+#'
+#' @param Zlist List of sampled allocation vectors.
+#' @param index Sample indices to include in the posterior mode.
+#'
+#' @return An integer vector of modal cluster allocations.
 #' @noRd
-sumerizeZ <- function(Zlist, index = 1:length(Zlist)) {
+#' @noRd
+summarize_allocations <- function(Zlist, index = seq_along(Zlist)) {
   sampleSize <- length(Zlist[[1]])
-  res <- c()
-  for (i in 1:sampleSize) {
-    temp <- c()
-    for (j in index) {
-      temp[j] <- Zlist[[j]][i]
+  res <- integer(sampleSize)
+
+  for (i in seq_len(sampleSize)) {
+    temp <- integer(length(index))
+    for (j in seq_along(index)) {
+      temp[j] <- Zlist[[index[j]]][i]
     }
-    res[i] <- getmode(temp)
+    res[i] <- get_mode(temp)
   }
-  return(res)
+
+  res
 }
 
+#' (internal)
+#' @noRd
+summarize_allocations_legacy <- summarize_allocations
+
 
 
 #' (internal)
 #' @noRd
-getmode <- function(v) {
+#' @noRd
+get_mode <- function(v) {
   v <- v[!is.na(v)]
   uniqv <- unique(v)
   uniqv[which.max(tabulate(match(v, uniqv)))]
@@ -88,7 +101,8 @@ getmode <- function(v) {
 
 #' (internal)
 #' @noRd
-calculateVarList <- function(psyList, lambdaList) {
+#' @noRd
+calculate_covariance_list <- function(psyList, lambdaList) {
   m <- length(psyList)
   varList <- list()
   for (i in 1:m) {
@@ -98,10 +112,18 @@ calculateVarList <- function(psyList, lambdaList) {
   return(varList)
 }
 
+#' (internal)
+#' @noRd
+#' @noRd
+update_latent_scores <- function(X, thetaYList, ZOneDim, clusInd, qVec) {
+  update_latent_scores_cpp(X, thetaYList, ZOneDim, clusInd, qVec)
+}
+
 
 #' (internal)
 #' @noRd
-clearCurrentThetaYlist <- function(thetaYList, clusInd, mMax) {
+#' @noRd
+clear_inactive_components <- function(thetaYList, clusInd, mMax) {
   resThetaYList <- thetaYList
 
   for (i in 1:mMax) {
@@ -125,7 +147,8 @@ clearCurrentThetaYlist <- function(thetaYList, clusInd, mMax) {
 
 #' (internal)
 #' @noRd
-combineClusterPara <- function(oldList, newList, ind) {
+#' @noRd
+combine_cluster_parameters <- function(oldList, newList, ind) {
   resList <- oldList
   resList@tao <- oldList@tao * (1 - newList@tao)
   resList@tao[ind] <- newList@tao
@@ -142,7 +165,8 @@ combineClusterPara <- function(oldList, newList, ind) {
 
 #' (internal)
 #' @noRd
-getIndThetaY <- function(thetaYList, Ind) {
+#' @noRd
+subset_theta_y <- function(thetaYList, Ind) {
   new("ThetaYList",
     tao = thetaYList@tao[Ind],
     psy = thetaYList@psy[Ind],
@@ -154,7 +178,8 @@ getIndThetaY <- function(thetaYList, Ind) {
 
 #' (internal)
 #' @noRd
-getRemovedIndThetaY <- function(thetaYList, Ind) {
+#' @noRd
+remove_theta_y_component <- function(thetaYList, Ind) {
   res <- thetaYList
 
   res@tao[Ind] <- NA
@@ -169,11 +194,8 @@ getRemovedIndThetaY <- function(thetaYList, Ind) {
 
 #' (internal)
 #' @noRd
-changeConstraintFormat <- function(strNum) {
-  res <- ""
-  res <- gsub(pattern = "0", replacement = "U", x = strNum)
-  res <- gsub(pattern = "1", replacement = "C", x = res)
-  res <- gsub(pattern = "\\(", replacement = "", x = res)
-  res <- gsub(pattern = "\\)", replacement = "", x = res)
-  return(res)
+#' @noRd
+change_constraint_format <- function(strNum) {
+  digits <- regmatches(strNum, gregexpr("[01]", strNum))[[1]]
+  constraint_to_model(as.integer(digits))
 }

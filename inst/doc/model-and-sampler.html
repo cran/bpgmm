@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Model and sampler details</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Model and sampler details</h1>
+
+
+
+<p>This section connects the notation in Lu, Li, and Love (2021) to the
+<code>bpgmm</code> interface. It describes the fitted model, the
+covariance labels, and the RJMCMC switches used by the sampler. Full
+fitted examples are given in the getting-started and worked-example
+vignettes.</p>
+<div id="observation-model" class="section level2">
+<h2>Observation model</h2>
+<p>Let <span class="math inline">\(X = (x_1, \ldots, x_n)\)</span> be a
+matrix of continuous observations with <span class="math inline">\(p\)</span> variables and <span class="math inline">\(n\)</span> observations. <code>bpgmm</code>
+expects this same orientation: variables in rows and observations in
+columns.</p>
+<p>For cluster <span class="math inline">\(k\)</span>, the mixture of
+factor analyzers model writes</p>
+<p><span class="math display">\[
+x_i = \mu_k + \Lambda_k y_{ki} + \epsilon_{ki},
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+y_{ki} \sim N(0, I_{q_k}), \qquad
+\epsilon_{ki} \sim N(0, \Psi_k).
+\]</span></p>
+<p>After integrating out the latent factor <span class="math inline">\(y_{ki}\)</span>, the cluster-specific covariance
+is</p>
+<p><span class="math display">\[
+\Sigma_k = \Lambda_k \Lambda_k^\top + \Psi_k.
+\]</span></p>
+<p>The plot below shows the geometric role of this covariance. The
+loading matrix <span class="math inline">\(\Lambda_k\)</span> controls
+the dominant low-dimensional direction, while <span class="math inline">\(\Psi_k\)</span> adds cluster-specific noise around
+that subspace.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>ellipse_points <span class="ot">&lt;-</span> <span class="cf">function</span>(center, sigma, <span class="at">level =</span> <span class="fl">0.90</span>, <span class="at">n =</span> <span class="dv">120</span>) {</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  eig <span class="ot">&lt;-</span> <span class="fu">eigen</span>(sigma, <span class="at">symmetric =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  angles <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span> <span class="sc">*</span> pi, <span class="at">length.out =</span> n)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  circle <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">cos</span>(angles), <span class="fu">sin</span>(angles))</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  radius <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">qchisq</span>(level, <span class="at">df =</span> <span class="dv">2</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  points <span class="ot">&lt;-</span> <span class="fu">t</span>(center <span class="sc">+</span> radius <span class="sc">*</span> eig<span class="sc">$</span>vectors <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="fu">sqrt</span>(eig<span class="sc">$</span>values), <span class="dv">2</span>) <span class="sc">%*%</span> circle)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="fu">colnames</span>(points) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  points</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>}</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>lambda_1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">0.4</span>), <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>lambda_2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">1.0</span>), <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>psi_1 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">c</span>(<span class="fl">0.20</span>, <span class="fl">0.08</span>))</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>psi_2 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">c</span>(<span class="fl">0.10</span>, <span class="fl">0.25</span>))</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>sigma_1 <span class="ot">&lt;-</span> lambda_1 <span class="sc">%*%</span> <span class="fu">t</span>(lambda_1) <span class="sc">+</span> psi_1</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>sigma_2 <span class="ot">&lt;-</span> lambda_2 <span class="sc">%*%</span> <span class="fu">t</span>(lambda_2) <span class="sc">+</span> psi_2</span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>ell_1 <span class="ot">&lt;-</span> <span class="fu">ellipse_points</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.2</span>, <span class="sc">-</span><span class="fl">0.5</span>), sigma_1)</span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>ell_2 <span class="ot">&lt;-</span> <span class="fu">ellipse_points</span>(<span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">0.6</span>), sigma_2)</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>  ell_1,</span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">&quot;#0072B2&quot;</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">3.5</span>, <span class="fl">3.5</span>),</span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">2.5</span>, <span class="dv">3</span>),</span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Variable 1&quot;</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Variable 2&quot;</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;Mixture-of-factor-analyzers covariance&quot;</span></span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a>)</span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a><span class="fu">lines</span>(ell_2, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;#D55E00&quot;</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a><span class="fu">points</span>(<span class="fu">rbind</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.2</span>, <span class="sc">-</span><span class="fl">0.5</span>), <span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">0.6</span>)), <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>))</span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a><span class="fu">arrows</span>(<span class="sc">-</span><span class="fl">1.2</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">1.2</span> <span class="sc">+</span> lambda_1[<span class="dv">1</span>], <span class="sc">-</span><span class="fl">0.5</span> <span class="sc">+</span> lambda_1[<span class="dv">2</span>], <span class="at">col =</span> <span class="st">&quot;#0072B2&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">length =</span> <span class="fl">0.08</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a><span class="fu">arrows</span>(<span class="fl">1.1</span>, <span class="fl">0.6</span>, <span class="fl">1.1</span> <span class="sc">+</span> lambda_2[<span class="dv">1</span>], <span class="fl">0.6</span> <span class="sc">+</span> lambda_2[<span class="dv">2</span>], <span class="at">col =</span> <span class="st">&quot;#D55E00&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">length =</span> <span class="fl">0.08</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" tabindex="-1"></a><span class="fu">legend</span>(</span>
+<span id="cb1-37"><a href="#cb1-37" tabindex="-1"></a>  <span class="st">&quot;topleft&quot;</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Cluster 1 covariance&quot;</span>, <span class="st">&quot;Cluster 2 covariance&quot;</span>, <span class="st">&quot;Loading direction&quot;</span>),</span>
+<span id="cb1-39"><a href="#cb1-39" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;gray30&quot;</span>),</span>
+<span id="cb1-40"><a href="#cb1-40" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb1-41"><a href="#cb1-41" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">&quot;n&quot;</span></span>
+<span id="cb1-42"><a href="#cb1-42" tabindex="-1"></a>)</span></code></pre></div>
+<p><img role="img" aria-label="Two covariance ellipses illustrating cluster-specific covariance matrices." src="data:image/png;base64,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" alt="Two covariance ellipses illustrating cluster-specific covariance matrices." /></p>
+<p>The mixture density is</p>
+<p><span class="math display">\[
+f(x_i) = \sum_{k = 1}^m \tau_k
+  N(x_i \mid \mu_k, \Lambda_k \Lambda_k^\top + \Psi_k),
+\]</span></p>
+<p>where <span class="math inline">\(\tau_k\)</span> is the mixture
+weight and <span class="math inline">\(m\)</span> is the number of
+clusters. Equivalently, with allocation indicator <span class="math inline">\(z_i \in \{1,\ldots,m\}\)</span>,</p>
+<p><span class="math display">\[
+x_i \mid z_i = k, \Theta
+  \sim N_p(\mu_k, \Sigma_k),
+\qquad
+\Pr(z_i = k \mid \tau) = \tau_k .
+\]</span></p>
+<p>In <code>pgmm_rjmcmc()</code>:</p>
+<ul>
+<li><code>X</code> is the <span class="math inline">\(p \times
+n\)</span> data matrix.</li>
+<li><code>m_init</code> is the starting value of <span class="math inline">\(m\)</span>.</li>
+<li><code>m_range</code> is the allowed range of <span class="math inline">\(m\)</span>.</li>
+<li><code>q_new</code> is the factor dimension assigned to a newly
+proposed cluster.</li>
+<li><code>constraint</code> is the starting covariance model.</li>
+</ul>
+</div>
+<div id="pgmm-covariance-constraints" class="section level2">
+<h2>PGMM covariance constraints</h2>
+<p>The paper uses three letters to describe the covariance structure.
+Each letter is either <code>C</code> for constrained or <code>U</code>
+for unconstrained.</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Letter</th>
+<th>Meaning when <code>C</code></th>
+<th>Meaning when <code>U</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>all clusters share one loading matrix <span class="math inline">\(\Lambda\)</span></td>
+<td>each cluster has <span class="math inline">\(\Lambda_k\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>all clusters share one noise covariance <span class="math inline">\(\Psi\)</span></td>
+<td>each cluster has <span class="math inline">\(\Psi_k\)</span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>noise covariance is isotropic, <span class="math inline">\(\Psi_k =
+\psi_k I_p\)</span></td>
+<td>noise covariance is diagonal</td>
+</tr>
+</tbody>
+</table>
+<p>The eight PGMM models are:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(bpgmm)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;CCC&quot;</span>, <span class="st">&quot;CCU&quot;</span>, <span class="st">&quot;CUC&quot;</span>, <span class="st">&quot;CUU&quot;</span>, <span class="st">&quot;UCC&quot;</span>, <span class="st">&quot;UCU&quot;</span>, <span class="st">&quot;UUC&quot;</span>, <span class="st">&quot;UUU&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="at">model =</span> models,</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="at">constraint =</span> <span class="fu">vapply</span>(</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>    models,</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>    <span class="cf">function</span>(x) <span class="fu">paste</span>(<span class="fu">model_to_constraint</span>(x), <span class="at">collapse =</span> <span class="st">&quot;,&quot;</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>    <span class="fu">character</span>(<span class="dv">1</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  )</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>)</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt;     model constraint</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; CCC   CCC      1,1,1</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; CCU   CCU      1,1,0</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; CUC   CUC      1,0,1</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; CUU   CUU      1,0,0</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; UCC   UCC      0,1,1</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; UCU   UCU      0,1,0</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; UUC   UUC      0,0,1</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; UUU   UUU      0,0,0</span></span></code></pre></div>
+<p>The package uses the numeric encoding internally: <code>1</code>
+means constrained and <code>0</code> means unconstrained.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">model_to_constraint</span>(<span class="st">&quot;UUU&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; [1] 0 0 0</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">constraint_to_model</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;CCU&quot;</span></span></code></pre></div>
+</div>
+<div id="priors-and-posterior-updates" class="section level2">
+<h2>Priors and posterior updates</h2>
+<p>The supplement gives the natural conjugate priors used by the MCMC
+updates. The main priors are:</p>
+<p><span class="math display">\[
+\tau \sim \mathrm{Dirichlet}(\gamma, \ldots, \gamma),
+\]</span></p>
+<p><span class="math display">\[
+y_{ki} \sim N(0, I_{q_k}),
+\]</span></p>
+<p><span class="math display">\[
+\mu_k \sim N(\bar{x}, \alpha_1^{-1} \Psi_k),
+\]</span></p>
+<p><span class="math display">\[
+\lambda_{kj} \sim N(0, \alpha_2^{-1} \Psi_k),
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\psi_{kj} \sim \mathrm{IG}(\delta, \beta).
+\]</span></p>
+<p>The complete parameter state can be read as</p>
+<p><span class="math display">\[
+\Theta =
+\{\tau_k, \mu_k, \Lambda_k, \Psi_k, y_{ki}, z_i:
+  k = 1,\ldots,m;\ i = 1,\ldots,n\},
+\]</span></p>
+<p>with hyperparameters</p>
+<p><span class="math display">\[
+H = (\alpha_1, \alpha_2, \beta, \delta, \gamma).
+\]</span></p>
+<p>The package samples the hyperparameters <span class="math inline">\(\alpha_1\)</span>, <span class="math inline">\(\alpha_2\)</span>, and <span class="math inline">\(\beta\)</span>, with gamma hyperpriors controlled
+by:</p>
+<ul>
+<li><code>d_vec</code>: shape parameters.</li>
+<li><code>s_vec</code>: rate parameters.</li>
+<li><code>delta</code>: inverse-gamma shape for the noise
+covariance.</li>
+<li><code>ggamma</code>: Dirichlet concentration for mixture
+weights.</li>
+</ul>
+<p>The allocation update uses the posterior probability</p>
+<p><span class="math display">\[
+p_{ki} =
+\frac{
+  \tau_k N(x_i \mid \mu_k, \Psi_k + \Lambda_k\Lambda_k^\top)
+}{
+  \sum_{\ell = 1}^{m}
+  \tau_\ell N(x_i \mid \mu_\ell, \Psi_\ell +
+\Lambda_\ell\Lambda_\ell^\top)
+}.
+\]</span></p>
+<p>Then</p>
+<p><span class="math display">\[
+(z_{i1}, \ldots, z_{im}) \mid X, \Theta, H
+  \sim \mathrm{Multinomial}(1, p_{1i}, \ldots, p_{mi}).
+\]</span></p>
+<p>The allocation update uses this probability, and the joint posterior
+includes the product of allocated mixture weights:</p>
+<p><span class="math display">\[
+p(Z \mid \tau) = \prod_{i = 1}^{n} \tau_{z_i}.
+\]</span></p>
+</div>
+<div id="rjmcmc-moves" class="section level2">
+<h2>RJMCMC moves</h2>
+<p>RJMCMC is used because the number of parameters changes when the
+number of clusters or the covariance constraint changes.</p>
+<p>The cluster-number moves are:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Move</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>stay</td>
+<td>update parameters without changing <span class="math inline">\(m\)</span></td>
+</tr>
+<tr class="even">
+<td>birth</td>
+<td>add a new empty cluster</td>
+</tr>
+<tr class="odd">
+<td>death</td>
+<td>remove an empty cluster</td>
+</tr>
+<tr class="even">
+<td>split</td>
+<td>split one occupied cluster into two clusters</td>
+</tr>
+<tr class="odd">
+<td>combine</td>
+<td>merge two occupied clusters</td>
+</tr>
+</tbody>
+</table>
+<p>The covariance-structure moves toggle one constraint at a time:</p>
+<ul>
+<li>toggle whether <span class="math inline">\(\Lambda_k\)</span> is
+shared across clusters;</li>
+<li>toggle whether <span class="math inline">\(\Psi_k\)</span> is shared
+across clusters;</li>
+<li>toggle whether <span class="math inline">\(\Psi_k\)</span> is
+isotropic or diagonal.</li>
+</ul>
+<p>In <code>pgmm_rjmcmc()</code>:</p>
+<ul>
+<li><code>m_step = 1</code> enables birth/death moves for <span class="math inline">\(m\)</span>.</li>
+<li><code>split_combine = 1</code> adds split/combine moves when
+<code>m_step = 1</code>.</li>
+<li><code>v_step = 1</code> enables covariance-constraint moves.</li>
+</ul>
+<p>For a proposed move from model <span class="math inline">\(M\)</span>
+to <span class="math inline">\(M&#39;\)</span>, the RJMCMC acceptance
+probability has the standard form</p>
+<p><span class="math display">\[
+a =
+\min\left\{
+1,
+\frac{
+  p(X, Z, \Theta&#39;, H&#39; \mid M&#39;)\,p(M&#39;)\,q(M \mid M&#39;)
+}{
+  p(X, Z, \Theta, H \mid M)\,p(M)\,q(M&#39; \mid M)
+}
+\left|J\right|
+\right\},
+\]</span></p>
+<p>where <span class="math inline">\(q(\cdot)\)</span> is the proposal
+density and <span class="math inline">\(|J|\)</span> is the Jacobian
+term for dimension-changing moves such as split/combine. Birth/death and
+split/combine change <span class="math inline">\(m\)</span>; covariance
+moves change the constraint label <span class="math inline">\(v \in
+\{\mathrm{CCC}, \ldots, \mathrm{UUU}\}\)</span>.</p>
+</div>
+<div id="interface-mapping" class="section level2">
+<h2>Interface mapping</h2>
+<p>The formula terms map to package output fields as follows:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Paper notation</th>
+<th>Package argument or output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(X = (x_1,\ldots,x_n)\)</span></td>
+<td><code>X</code>, a <span class="math inline">\(p \times n\)</span>
+numeric matrix</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(m\)</span></td>
+<td><code>m_init</code>, <code>m_range</code>,
+<code>active_cluster_samples</code></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(q_k\)</span></td>
+<td><code>q_new</code> for newly proposed clusters</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(z_i\)</span></td>
+<td><code>allocation_samples</code>,
+<code>summary$allocation</code></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\tau_k\)</span></td>
+<td><code>tau_samples</code></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mu_k\)</span></td>
+<td><code>mean_samples</code></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\Lambda_k\)</span></td>
+<td><code>lambda_samples</code></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\Psi_k\)</span></td>
+<td><code>psi_samples</code></td>
+</tr>
+<tr class="odd">
+<td>covariance model <span class="math inline">\(v\)</span></td>
+<td><code>constraint</code>, <code>constraint_samples</code></td>
+</tr>
+</tbody>
+</table>
+<p>An applied model-selection call usually has the following
+structure:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">pgmm_rjmcmc</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="at">X =</span> your_data_matrix,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">m_init =</span> <span class="dv">5</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">m_range =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">q_new =</span> <span class="dv">4</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">burn =</span> <span class="dv">5000</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">15000</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="at">constraint =</span> <span class="fu">model_to_constraint</span>(<span class="st">&quot;UUU&quot;</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="at">m_step =</span> <span class="dv">1</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  <span class="at">v_step =</span> <span class="dv">1</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="at">split_combine =</span> <span class="dv">1</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="citation" class="section level2">
+<h2>Citation</h2>
+<p>If you use these methods, cite:</p>
+<p>Lu, X., Li, Y., &amp; Love, T. (2021). On Bayesian Analysis of
+Parsimonious Gaussian Mixture Models. <em>Journal of
+Classification</em>, 38, 576-593. <a href="https://doi.org/10.1007/s00357-021-09391-8" class="uri">https://doi.org/10.1007/s00357-021-09391-8</a></p>
+<p>In R:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">citation</span>(<span class="st">&quot;bpgmm&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; To cite package &#39;bpgmm&#39; in publications use:</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt;   Lu X, Li Y, Love T (2021). On Bayesian Analysis of Parsimonious</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt;   Gaussian Mixture Models. Journal of Classification, 38, 576-593.</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt;   doi:10.1007/s00357-021-09391-8</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; A BibTeX entry for LaTeX users is</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;   @Article{,</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt;     title = {On Bayesian Analysis of Parsimonious Gaussian Mixture Models},</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt;     author = {Xiang Lu and Yaoxiang Li and Tanzy Love},</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt;     journal = {Journal of Classification},</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt;     year = {2021},</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt;     volume = {38},</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt;     pages = {576--593},</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt;     doi = {10.1007/s00357-021-09391-8},</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt;   }</span></span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

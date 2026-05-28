@@ -11,57 +11,107 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// Calculate_Cxy
-Rcpp::List Calculate_Cxy(int m, int n, Rcpp::S4 hparam, Rcpp::S4 thetaYList, arma::vec ZOneDim, arma::vec qVec, arma::mat X);
-RcppExport SEXP _bpgmm_Calculate_Cxy(SEXP mSEXP, SEXP nSEXP, SEXP hparamSEXP, SEXP thetaYListSEXP, SEXP ZOneDimSEXP, SEXP qVecSEXP, SEXP XSEXP) {
+// calculate_cxy_native
+Rcpp::List calculate_cxy_native(int m, int n, Rcpp::S4 hparam, Rcpp::S4 theta_y_list, arma::vec z, arma::vec q_vec, arma::mat X);
+RcppExport SEXP _bpgmm_calculate_cxy_native(SEXP mSEXP, SEXP nSEXP, SEXP hparamSEXP, SEXP theta_y_listSEXP, SEXP zSEXP, SEXP q_vecSEXP, SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< Rcpp::S4 >::type hparam(hparamSEXP);
-    Rcpp::traits::input_parameter< Rcpp::S4 >::type thetaYList(thetaYListSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type ZOneDim(ZOneDimSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type qVec(qVecSEXP);
+    Rcpp::traits::input_parameter< Rcpp::S4 >::type theta_y_list(theta_y_listSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type z(zSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type q_vec(q_vecSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
-    rcpp_result_gen = Rcpp::wrap(Calculate_Cxy(m, n, hparam, thetaYList, ZOneDim, qVec, X));
+    rcpp_result_gen = Rcpp::wrap(calculate_cxy_native(m, n, hparam, theta_y_list, z, q_vec, X));
     return rcpp_result_gen;
 END_RCPP
 }
-// Calculate_PostLambdaPsy
-Rcpp::List Calculate_PostLambdaPsy(int m, int p, Rcpp::S4 hparam, Rcpp::List CxyList, Rcpp::S4 thetaYList, arma::vec qVec, arma::vec constraint);
-RcppExport SEXP _bpgmm_Calculate_PostLambdaPsy(SEXP mSEXP, SEXP pSEXP, SEXP hparamSEXP, SEXP CxyListSEXP, SEXP thetaYListSEXP, SEXP qVecSEXP, SEXP constraintSEXP) {
+// calculate_post_lambda_psi_native
+Rcpp::List calculate_post_lambda_psi_native(int m, int p, Rcpp::S4 hparam, Rcpp::List cxy_list, Rcpp::S4 theta_y_list, arma::vec q_vec, arma::vec constraint);
+RcppExport SEXP _bpgmm_calculate_post_lambda_psi_native(SEXP mSEXP, SEXP pSEXP, SEXP hparamSEXP, SEXP cxy_listSEXP, SEXP theta_y_listSEXP, SEXP q_vecSEXP, SEXP constraintSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
     Rcpp::traits::input_parameter< int >::type p(pSEXP);
     Rcpp::traits::input_parameter< Rcpp::S4 >::type hparam(hparamSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type CxyList(CxyListSEXP);
-    Rcpp::traits::input_parameter< Rcpp::S4 >::type thetaYList(thetaYListSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type qVec(qVecSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type cxy_list(cxy_listSEXP);
+    Rcpp::traits::input_parameter< Rcpp::S4 >::type theta_y_list(theta_y_listSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type q_vec(q_vecSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type constraint(constraintSEXP);
-    rcpp_result_gen = Rcpp::wrap(Calculate_PostLambdaPsy(m, p, hparam, CxyList, thetaYList, qVec, constraint));
+    rcpp_result_gen = Rcpp::wrap(calculate_post_lambda_psi_native(m, p, hparam, cxy_list, theta_y_list, q_vec, constraint));
     return rcpp_result_gen;
 END_RCPP
 }
-// update_PostZ
-Rcpp::IntegerVector update_PostZ(arma::mat X, int m, int n, Rcpp::S4 thetaYList);
-RcppExport SEXP _bpgmm_update_PostZ(SEXP XSEXP, SEXP mSEXP, SEXP nSEXP, SEXP thetaYListSEXP) {
+// evaluate_prior_psi_native
+double evaluate_prior_psi_native(Rcpp::List psy, int p, int m, double delta, double bbeta, arma::vec constraint, arma::vec clus_ind);
+RcppExport SEXP _bpgmm_evaluate_prior_psi_native(SEXP psySEXP, SEXP pSEXP, SEXP mSEXP, SEXP deltaSEXP, SEXP bbetaSEXP, SEXP constraintSEXP, SEXP clus_indSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type psy(psySEXP);
+    Rcpp::traits::input_parameter< int >::type p(pSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
+    Rcpp::traits::input_parameter< double >::type bbeta(bbetaSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type constraint(constraintSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type clus_ind(clus_indSEXP);
+    rcpp_result_gen = Rcpp::wrap(evaluate_prior_psi_native(psy, p, m, delta, bbeta, constraint, clus_ind));
+    return rcpp_result_gen;
+END_RCPP
+}
+// evaluate_prior_lambda_native
+double evaluate_prior_lambda_native(int p, int m, double alpha2, arma::vec q_vec, Rcpp::List psy, Rcpp::List lambda, arma::vec constraint, arma::vec clus_ind);
+RcppExport SEXP _bpgmm_evaluate_prior_lambda_native(SEXP pSEXP, SEXP mSEXP, SEXP alpha2SEXP, SEXP q_vecSEXP, SEXP psySEXP, SEXP lambdaSEXP, SEXP constraintSEXP, SEXP clus_indSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type p(pSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha2(alpha2SEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type q_vec(q_vecSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type psy(psySEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type constraint(constraintSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type clus_ind(clus_indSEXP);
+    rcpp_result_gen = Rcpp::wrap(evaluate_prior_lambda_native(p, m, alpha2, q_vec, psy, lambda, constraint, clus_ind));
+    return rcpp_result_gen;
+END_RCPP
+}
+// update_latent_scores_native
+Rcpp::List update_latent_scores_native(arma::mat X, Rcpp::S4 theta_y_list, arma::vec z, arma::vec clus_ind, arma::vec q_vec);
+RcppExport SEXP _bpgmm_update_latent_scores_native(SEXP XSEXP, SEXP theta_y_listSEXP, SEXP zSEXP, SEXP clus_indSEXP, SEXP q_vecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< Rcpp::S4 >::type theta_y_list(theta_y_listSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type z(zSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type clus_ind(clus_indSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type q_vec(q_vecSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_latent_scores_native(X, theta_y_list, z, clus_ind, q_vec));
+    return rcpp_result_gen;
+END_RCPP
+}
+// update_post_z_native
+Rcpp::IntegerVector update_post_z_native(arma::mat X, int m, int n, Rcpp::S4 theta_y_list);
+RcppExport SEXP _bpgmm_update_post_z_native(SEXP XSEXP, SEXP mSEXP, SEXP nSEXP, SEXP theta_y_listSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< Rcpp::S4 >::type thetaYList(thetaYListSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_PostZ(X, m, n, thetaYList));
+    Rcpp::traits::input_parameter< Rcpp::S4 >::type theta_y_list(theta_y_listSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_post_z_native(X, m, n, theta_y_list));
     return rcpp_result_gen;
 END_RCPP
 }
-// update_Hyperparameter
-S4 update_Hyperparameter(int m, int p, int q, Rcpp::S4 hparam, Rcpp::S4 thetaYList, arma::vec dVec, arma::vec sVec);
-RcppExport SEXP _bpgmm_update_Hyperparameter(SEXP mSEXP, SEXP pSEXP, SEXP qSEXP, SEXP hparamSEXP, SEXP thetaYListSEXP, SEXP dVecSEXP, SEXP sVecSEXP) {
+// update_hyperparameter_native
+S4 update_hyperparameter_native(int m, int p, int q, Rcpp::S4 hparam, Rcpp::S4 theta_y_list, arma::vec d_vec, arma::vec s_vec);
+RcppExport SEXP _bpgmm_update_hyperparameter_native(SEXP mSEXP, SEXP pSEXP, SEXP qSEXP, SEXP hparamSEXP, SEXP theta_y_listSEXP, SEXP d_vecSEXP, SEXP s_vecSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -69,61 +119,64 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type p(pSEXP);
     Rcpp::traits::input_parameter< int >::type q(qSEXP);
     Rcpp::traits::input_parameter< Rcpp::S4 >::type hparam(hparamSEXP);
-    Rcpp::traits::input_parameter< Rcpp::S4 >::type thetaYList(thetaYListSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type dVec(dVecSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type sVec(sVecSEXP);
-    rcpp_result_gen = Rcpp::wrap(update_Hyperparameter(m, p, q, hparam, thetaYList, dVec, sVec));
+    Rcpp::traits::input_parameter< Rcpp::S4 >::type theta_y_list(theta_y_listSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type d_vec(d_vecSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type s_vec(s_vecSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_hyperparameter_native(m, p, q, hparam, theta_y_list, d_vec, s_vec));
     return rcpp_result_gen;
 END_RCPP
 }
-// get_Z_mat
-arma::mat get_Z_mat(arma::vec ZOneDim, int m, int n);
-RcppExport SEXP _bpgmm_get_Z_mat(SEXP ZOneDimSEXP, SEXP mSEXP, SEXP nSEXP) {
+// get_z_matrix_native
+arma::mat get_z_matrix_native(const arma::vec& z, int m, int n);
+RcppExport SEXP _bpgmm_get_z_matrix_native(SEXP zSEXP, SEXP mSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec >::type ZOneDim(ZOneDimSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type z(zSEXP);
     Rcpp::traits::input_parameter< int >::type m(mSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_Z_mat(ZOneDim, m, n));
+    rcpp_result_gen = Rcpp::wrap(get_z_matrix_native(z, m, n));
     return rcpp_result_gen;
 END_RCPP
 }
-// dmvnrm_arma
-arma::vec dmvnrm_arma(arma::mat x, arma::rowvec mean, arma::mat sigma, bool logd);
-RcppExport SEXP _bpgmm_dmvnrm_arma(SEXP xSEXP, SEXP meanSEXP, SEXP sigmaSEXP, SEXP logdSEXP) {
+// multivariate_normal_density_native
+arma::vec multivariate_normal_density_native(const arma::mat& x, const arma::rowvec& mean, const arma::mat& sigma, bool logd);
+RcppExport SEXP _bpgmm_multivariate_normal_density_native(SEXP xSEXP, SEXP meanSEXP, SEXP sigmaSEXP, SEXP logdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
-    Rcpp::traits::input_parameter< arma::rowvec >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< bool >::type logd(logdSEXP);
-    rcpp_result_gen = Rcpp::wrap(dmvnrm_arma(x, mean, sigma, logd));
+    rcpp_result_gen = Rcpp::wrap(multivariate_normal_density_native(x, mean, sigma, logd));
     return rcpp_result_gen;
 END_RCPP
 }
-// calculate_Ratio
-double calculate_Ratio(double logDeno, arma::vec logNume);
-RcppExport SEXP _bpgmm_calculate_Ratio(SEXP logDenoSEXP, SEXP logNumeSEXP) {
+// calculate_ratio_native
+double calculate_ratio_native(double log_denominator, const arma::vec& log_numerator);
+RcppExport SEXP _bpgmm_calculate_ratio_native(SEXP log_denominatorSEXP, SEXP log_numeratorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type logDeno(logDenoSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type logNume(logNumeSEXP);
-    rcpp_result_gen = Rcpp::wrap(calculate_Ratio(logDeno, logNume));
+    Rcpp::traits::input_parameter< double >::type log_denominator(log_denominatorSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type log_numerator(log_numeratorSEXP);
+    rcpp_result_gen = Rcpp::wrap(calculate_ratio_native(log_denominator, log_numerator));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bpgmm_Calculate_Cxy", (DL_FUNC) &_bpgmm_Calculate_Cxy, 7},
-    {"_bpgmm_Calculate_PostLambdaPsy", (DL_FUNC) &_bpgmm_Calculate_PostLambdaPsy, 7},
-    {"_bpgmm_update_PostZ", (DL_FUNC) &_bpgmm_update_PostZ, 4},
-    {"_bpgmm_update_Hyperparameter", (DL_FUNC) &_bpgmm_update_Hyperparameter, 7},
-    {"_bpgmm_get_Z_mat", (DL_FUNC) &_bpgmm_get_Z_mat, 3},
-    {"_bpgmm_dmvnrm_arma", (DL_FUNC) &_bpgmm_dmvnrm_arma, 4},
-    {"_bpgmm_calculate_Ratio", (DL_FUNC) &_bpgmm_calculate_Ratio, 2},
+    {"_bpgmm_calculate_cxy_native", (DL_FUNC) &_bpgmm_calculate_cxy_native, 7},
+    {"_bpgmm_calculate_post_lambda_psi_native", (DL_FUNC) &_bpgmm_calculate_post_lambda_psi_native, 7},
+    {"_bpgmm_evaluate_prior_psi_native", (DL_FUNC) &_bpgmm_evaluate_prior_psi_native, 7},
+    {"_bpgmm_evaluate_prior_lambda_native", (DL_FUNC) &_bpgmm_evaluate_prior_lambda_native, 8},
+    {"_bpgmm_update_latent_scores_native", (DL_FUNC) &_bpgmm_update_latent_scores_native, 5},
+    {"_bpgmm_update_post_z_native", (DL_FUNC) &_bpgmm_update_post_z_native, 4},
+    {"_bpgmm_update_hyperparameter_native", (DL_FUNC) &_bpgmm_update_hyperparameter_native, 7},
+    {"_bpgmm_get_z_matrix_native", (DL_FUNC) &_bpgmm_get_z_matrix_native, 3},
+    {"_bpgmm_multivariate_normal_density_native", (DL_FUNC) &_bpgmm_multivariate_normal_density_native, 4},
+    {"_bpgmm_calculate_ratio_native", (DL_FUNC) &_bpgmm_calculate_ratio_native, 2},
     {NULL, NULL, 0}
 };
 

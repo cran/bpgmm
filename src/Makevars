@@ -1,6 +1,5 @@
-# Use Armadillo with the compiler's current C++ standard
+# Use Armadillo with the compiler's C++ standard.
 PKG_CPPFLAGS = -DARMA_USE_CURRENT
 
-# Keep OpenMP/BLAS/LAPACK wiring exactly as before
-PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS)
-PKG_LIBS     = $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+# Armadillo-backed linear algebra uses R's BLAS/LAPACK libraries.
+PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
